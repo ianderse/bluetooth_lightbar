@@ -117,10 +117,10 @@ void loop(void)
   }
   
   if(strcmp(ble.buffer,"On") == 0) {
-    Serial.print("Go!");
+    strip.setBrightness(50);
     lightBarOn = 1;
   } else if (strcmp(ble.buffer,"Off") == 0) {
-    Serial.print("Stop it.");
+    strip.setBrightness(0);
     lightBarOn = 0;
   }
 
@@ -129,9 +129,11 @@ void loop(void)
     ble.readline();
     if(strcmp(ble.buffer,"On") == 0) {
       Serial.print("Go!");
+      strip.setBrightness(50);
       lightBarOn = 1;
     } else if (strcmp(ble.buffer,"Off") == 0) {
       Serial.print("Stop it.");
+      strip.setBrightness(0);
       lightBarOn = 0;
     }
     scanner(50);
