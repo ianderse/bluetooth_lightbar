@@ -50,8 +50,6 @@ void error(const __FlashStringHelper*err) {
 
 void setup(void)
 {
-  while (!Serial);  // required for Flora & Micro
-  delay(500);
 
   Serial.begin(115200);
   Serial.println(F("Adafruit Bluefruit Command Mode Example"));
@@ -121,11 +119,9 @@ void loop(void)
   if(strcmp(ble.buffer,"On") == 0) {
     Serial.print("Go!");
     lightBarOn = 1;
-    
   } else if (strcmp(ble.buffer,"Off") == 0) {
     Serial.print("Stop it.");
     lightBarOn = 0;
-  
   }
 
   while(lightBarOn == 1) {
@@ -170,6 +166,7 @@ bool getUserInput(char buffer[], uint8_t maxSize)
 
 void scanner(uint8_t wait) {
       if(lightBarOn == 0) {
+        strip.setBrightness(0);
         return;
       }
       if(forward == 1) {
