@@ -43,6 +43,15 @@ uint8_t lightBarOn = 0;
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LEDS, PIN, NEO_GRBW + NEO_KHZ800);
 
+void blackout()
+{
+    for (int leds = 0 ; leds < NUM_LEDS; leds++)
+     {
+        strip.setPixelColor(leds, 0, 0, 0);
+     }
+    strip.show();
+}
+
 void error(const __FlashStringHelper*err) {
   Serial.println(err);
   while (1);
@@ -120,7 +129,7 @@ void loop(void)
     strip.setBrightness(50);
     lightBarOn = 1;
   } else if (strcmp(ble.buffer,"Off") == 0) {
-    strip.setBrightness(0);
+    blackout();
     lightBarOn = 0;
   }
 
@@ -133,7 +142,7 @@ void loop(void)
       lightBarOn = 1;
     } else if (strcmp(ble.buffer,"Off") == 0) {
       Serial.print("Stop it.");
-      strip.setBrightness(0);
+      blackout();
       lightBarOn = 0;
     }
     scanner(50);
@@ -168,7 +177,7 @@ bool getUserInput(char buffer[], uint8_t maxSize)
 
 void scanner(uint8_t wait) {
       if(lightBarOn == 0) {
-        strip.setBrightness(0);
+        blackout();
         return;
       }
       if(forward == 1) {
