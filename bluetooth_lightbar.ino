@@ -114,14 +114,14 @@ void loop(void)
   if (strcmp(ble.buffer, "OK") == 0) {
     // no data
     return;
-  }
-  
-  if(strcmp(ble.buffer,"On") == 0) {
+  } else if(strcmp(ble.buffer,"On") == 0) {
     strip.setBrightness(50);
     lightBarOn = 1;
   } else if (strcmp(ble.buffer,"Off") == 0) {
     strip.setBrightness(0);
     lightBarOn = 0;
+  } else {
+    Serial.print(ble.buffer);
   }
 
   while(lightBarOn == 1) {
