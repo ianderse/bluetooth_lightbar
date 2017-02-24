@@ -1,17 +1,3 @@
-/*********************************************************************
- This is an example for our nRF51822 based Bluefruit LE modules
-
- Pick one up today in the adafruit shop!
-
- Adafruit invests time and resources providing this open source code,
- please support Adafruit and open-source hardware by purchasing
- products from Adafruit!
-
- MIT license, check LICENSE for more information
- All text above, and the splash screen below must be included in
- any redistribution
-*********************************************************************/
-
 #include <Arduino.h>
 #include <SPI.h>
 #if not defined (_VARIANT_ARDUINO_DUE_X_) && not defined (_VARIANT_ARDUINO_ZERO_)
@@ -35,6 +21,8 @@
 #define PIN 6
 #define NUM_LEDS 32
 #define BRIGHTNESS 50
+
+#define DEVICE_NAME "CLLightbar"
 
 Adafruit_BluefruitLE_SPI ble(BLUEFRUIT_SPI_CS, BLUEFRUIT_SPI_IRQ, BLUEFRUIT_SPI_RST);
 
@@ -84,14 +72,8 @@ void setup(void)
 
   /* Disable command echo from Bluefruit */
   ble.echo(false);
-
-  Serial.println("Requesting Bluefruit info:");
-  /* Print Bluefruit information */
+  
   ble.info();
-
-  Serial.println(F("Please use Adafruit Bluefruit LE app to connect in UART mode"));
-  Serial.println(F("Then Enter characters to send to Bluefruit"));
-  Serial.println();
 
   ble.verbose(false);  // debug info is a little annoying after this point!
 
@@ -109,6 +91,9 @@ void setup(void)
     ble.sendCommandCheckOK("AT+HWModeLED=" MODE_LED_BEHAVIOUR);
     Serial.println(F("******************************"));
   }
+
+  ble.sendCommandCheckOK("AT+GAPDEVNAME=" DEVICE_NAME);
+  ble.sendCommandCheckOK("ATZ");
 
   strip.setBrightness(BRIGHTNESS);
   strip.begin();
