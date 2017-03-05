@@ -22,12 +22,14 @@
 #define NUM_LEDS 32
 #define BRIGHTNESS 50
 
+
 #define DEVICE_NAME "CLLightbar"
 
 Adafruit_BluefruitLE_SPI ble(BLUEFRUIT_SPI_CS, BLUEFRUIT_SPI_IRQ, BLUEFRUIT_SPI_RST);
 
 uint8_t forward = 1;
 uint8_t lightBarOn = 0;
+int SPEED = 50;
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LEDS, PIN, NEO_GRBW + NEO_KHZ800);
 
@@ -129,8 +131,13 @@ void loop(void)
       Serial.print("Stop it.");
       blackout();
       lightBarOn = 0;
+    } else if (strncmp(ble.buffer,"SP", 2) == 0) {
+      int len = strlen(ble.buffer);
+      Serial.print("speed change.");
+      Serial.print(&ble.buffer[len-2]);
+      changeSpeed(atoi(&ble.buffer[len-2]));
     }
-    scanner(50);
+    scanner();
   }
 }
 
@@ -160,11 +167,19 @@ bool getUserInput(char buffer[], uint8_t maxSize)
   return true;
 }
 
-void scanner(uint8_t wait) {
+void changeSpeed(int new_speed) {
+  Serial.print("changing speed");
+  Serial.print(new_speed);
+  SPEED = (100 - new_speed);
+  Serial.print(SPEED);
+}
+
+void scanner() {
       if(lightBarOn == 0) {
         blackout();
         return;
       }
+
       if(forward == 1) {
         for(uint8_t i=0; i<strip.numPixels(); i++) {
           strip.setPixelColor(i, strip.Color(0,0,0,255 ) );
@@ -174,7 +189,7 @@ void scanner(uint8_t wait) {
           if (i == strip.numPixels() - 1) {
             forward = 0;
           }
-          delay(wait);
+          delay(SPEED);
           strip.show();
         }
       } else {
@@ -184,7 +199,7 @@ void scanner(uint8_t wait) {
           if (i == 1) {
             forward = 1;
           }
-          delay(wait);
+          delay(SPEED);
           strip.show();
         }
       }
