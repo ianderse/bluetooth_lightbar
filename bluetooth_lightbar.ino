@@ -133,8 +133,6 @@ void loop(void)
       lightBarOn = 0;
     } else if (strncmp(ble.buffer,"SP", 2) == 0) {
       int len = strlen(ble.buffer);
-      Serial.print("speed change.");
-      Serial.print(&ble.buffer[len-2]);
       changeSpeed(atoi(&ble.buffer[len-2]));
     }
     scanner();
@@ -168,10 +166,7 @@ bool getUserInput(char buffer[], uint8_t maxSize)
 }
 
 void changeSpeed(int new_speed) {
-  Serial.print("changing speed");
-  Serial.print(new_speed);
   SPEED = (100 - new_speed);
-  Serial.print(SPEED);
 }
 
 void scanner() {
